@@ -35,6 +35,8 @@ functions:
           event: s3:ObjectCreated:*
           rules:
             - suffix: .png
+    layers:
+      - arn:aws:lambda:${self:provider.region}:770693421928:layer:Klayers-p38-Pillow:1
 
 plugins:
   - serverless-python-requirements
