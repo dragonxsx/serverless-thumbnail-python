@@ -14,6 +14,8 @@ provider:
     THUMBNAIL_SIZE: 128
     REGION_NAME: ${self:provider.region}
     DYNAMODB_TABLE: ${self:custom.dynamoTable}
+  layers:
+      - arn:aws:lambda:${self:provider.region}:770693421928:layer:Klayers-p38-Pillow:1
   
   iam:
     role:
@@ -46,8 +48,27 @@ functions:
           event: s3:ObjectCreated:*
           rules:
             - suffix: .png
-    layers:
-      - arn:aws:lambda:${self:provider.region}:770693421928:layer:Klayers-p38-Pillow:1
+  list:
+    handler: handler.s3_get_thumbnail_urls
+    events:
+      - http:
+          path: images/
+          method: get
+          cors: true
+  get:
+    handler: handler.s3_get_item
+    events:
+      - http:
+          path: images/{id}
+          method: get
+          cors: true
+  delete:
+    handler: handler.s3_delete_item
+    events:
+      - http:
+          path: images/{id}
+          method: delete
+          cors: true
 
 resources:
   Resources:
